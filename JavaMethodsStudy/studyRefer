@@ -1,0 +1,2 @@
+SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
+Date date = sdf.parse("2006-12-20");
