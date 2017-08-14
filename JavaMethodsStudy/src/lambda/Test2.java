@@ -3,11 +3,15 @@ package lambda;
 import object.LongJuanFeng;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import org.apache.log4j.Logger;
 
 public class Test2 {
+
     public void doTest() {
         List list = new ArrayList<LongJuanFeng>();
         Random random = new Random();
@@ -34,6 +38,11 @@ public class Test2 {
 
     private void myFunc2(List<LongJuanFeng> list, Predicate<LongJuanFeng> condition) {
         list.forEach(n -> System.out.println(condition.test(n) ? n : "fail"));
+    }
+
+    private List<LongJuanFeng> myFunc3(List<LongJuanFeng> list, Long dickLen) {
+        list.stream().filter(a -> a.getDickLength() > dickLen);
+        return null;////
     }
 
 
