@@ -1,6 +1,9 @@
 package com.study.javaweb.test1.service;
 
 import com.fasterxml.jackson.core.util.ByteArrayBuilder;
+import org.apache.http.client.HttpRequestRetryHandler;
+import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.ibatis.javassist.bytecode.ByteArray;
 import org.apache.tomcat.util.security.MD5Encoder;
 import org.slf4j.Logger;
@@ -23,10 +26,12 @@ public class RestTempleTestService {
 
     private RestTemplate getRestTemplate() {
         if(restTemplate == null) {
+            HttpClientBuilder builder = HttpClientBuilder.create().setRetryHandler(new DefaultHttpRequestRetryHandler(5, true));
+            HttpComponentsClientHttpRequestFactory httpRequestFactory = new HttpComponentsClientHttpRequestFactory(builder.build());
+            httpRequestFactory.setConnectTimeout(1000);
+            httpRequestFactory.setReadTimeout(1000);
+            httpRequestFactory.setConnectionRequestTimeout(200);
 
-            HttpComponentsClientHttpRequestFactory httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
-            httpRequestFactory.setConnectTimeout(3000);
-            httpRequestFactory.setReadTimeout(3000);
             restTemplate = new RestTemplate(httpRequestFactory);
 
         }
@@ -58,11 +63,13 @@ public class RestTempleTestService {
         try {
             logger.info("send http request");
             //getRestTemplate().put("http://172.16.0.110:8888", new HttpEntity<>(data, headers));
-            getRestTemplate().getForObject("http://172.16.0.110:8888", String.class);
-            logger.info("send http requset success");
+            //getRestTemplate().getForObject("http://172.16.0.110:8888", String.class);
+            String result = getRestTemplate().getForObject("http://localhost:8080/teat/api1", String.class);
+            logger.info("send http requset success. result : {}", result);
 
         } catch (Exception e) {
             logger.error("http put error : {}", e.getMessage());
+
         }
 
     }
